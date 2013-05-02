@@ -231,9 +231,9 @@
         <min>1.8.1</min>
       </pearinstaller>
       <package>
-        <name>Console_CommandLine</name>
-        <channel>pear.php.net</channel>
-        <min>1.1.3</min>
+        <name>ConsoleTools</name>
+        <channel>components.ez.no</channel>
+        <min>1.6</min>
       </package>
       <package>
         <name>File_Iterator</name>
