@@ -65,12 +65,9 @@ if (strpos('@php_dir@', '@php_dir') === false) {
 
 require_once dirname(__FILE__) . '/Autoload.php';
 require_once 'File/Iterator/Autoload.php';
-require_once 'Log.php';
 
 if (stream_resolve_include_path('ezc/Base/base.php')) {
     require_once 'ezc/Base/base.php';
-}
-if (class_exists("ezcBase")) {
     spl_autoload_register(array('ezcBase', 'autoload'));
 }
 
@@ -140,9 +137,9 @@ class CbCLIController
     private $_ioHelper;
 
     /**
-     * Pear Log object where debug output should go to.
+     * ezcConsoleOutput object where debug output should go to.
      *
-     * @var Log
+     * @var ezcConsoleOutput
      */
     private $_debugLog;
 
@@ -358,7 +355,7 @@ class CbCLIController
         }
 
         // Convert the --ignore arguments to patterns
-        if (null !== $opts['ignore']) {
+        if ($opts['ignore']) {
             $dirSep = preg_quote(DIRECTORY_SEPARATOR, '/');
             foreach (explode(',', $opts['ignore']) as $ignore) {
                 $ig = realpath($ignore);
@@ -371,23 +368,29 @@ class CbCLIController
             }
         }
 
+        $output = new ezcConsoleOutput();
+        if (isset($opts['debugExcludes'])) {
+            $output->setOptions(
+                array("verbosityLevel" => LOG_DEBUG)
+            );
+        }
+        
         // init new CLIController
         $controller = new CbCLIController(
             $opts['log'],
             $opts['source'] ? $opts['source'] : array(),
             $opts['output'],
             $opts['excludePCRE'] ? $opts['excludePCRE'] : array(),
-            $opts['excludePattern'] ? $opts['excludePattern'] : array(),
+            isset($opts['excludePattern']) ? $opts['excludePattern'] : array(),
             $opts['crapThreshold'] ? array('CRAP' => array(
                                         'threshold' => $opts['crapThreshold'])
                                      )
                                    : array(),
             new CbIOHelper(),
-            $opts['debugExcludes'] ? Log::factory('console', '', 'PHPCB')
-                                   : Log::factory('null'),
-            $opts['phpSuffixes'] ? explode(',', $opts['phpSuffixes'])
+            $output,
+            isset($opts['phpSuffixes']) ? explode(',', $opts['phpSuffixes'])
                                  : array('php'),
-            $opts['excludeOK'] ? $opts['excludeOK'] : false
+            isset($opts['excludeOK']) ? $opts['excludeOK'] : false
         );
 
         $plugins = self::getAvailablePlugins();
