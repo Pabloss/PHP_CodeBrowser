@@ -1,5 +1,5 @@
 {
-  "name" : "covex-nn/phpcb", 
+  "name" : "mayflower/php-codebrowser", 
   "description" : "A code browser that augments the code with information from various QA tools.", 
   "license" : "BSD-2-Clause", 
   "require" : {

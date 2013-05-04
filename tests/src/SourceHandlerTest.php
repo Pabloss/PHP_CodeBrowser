@@ -45,8 +45,6 @@
  * @since      File available since  0.1.0
  */
 
-require_once 'Log.php';
-
 require_once realpath(dirname(__FILE__) . '/../AbstractTests.php');
 
 /**
