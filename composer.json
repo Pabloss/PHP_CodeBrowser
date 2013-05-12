@@ -1,5 +1,5 @@
 {
-  "name" : "mayflower/php-codebrowser", 
+  "name" : "covex-nn/phpcb", 
   "description" : "A code browser that augments the code with information from various QA tools.", 
   "license" : "BSD-2-Clause", 
   "require" : {
@@ -10,6 +10,9 @@
   "require-dev" : {
     "phpunit/phpunit" : "3.7.*"
   }, 
+  "replace": {
+    "mayflower/php-codebrowser": "self.version"
+  }, 
   "autoload" : {
     "classmap" : [ "src/" ]
   }, 
@@ -17,7 +20,7 @@
   "bin" : [ "bin/phpcb" ], 
   "extra" : {
     "branch-alias": {
-      "dev-master": "1.0.x-dev"
+      "dev-fork": "1.0.x-dev"
     }
   }, 
   "minimum-stability" : "dev", 
