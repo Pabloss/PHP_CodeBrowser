@@ -10,9 +10,6 @@
   "require-dev" : {
     "phpunit/phpunit" : "3.7.*"
   }, 
-  "replace": {
-    "mayflower/php-codebrowser": "self.version"
-  }, 
   "autoload" : {
     "classmap" : [ "src/" ]
   }, 
