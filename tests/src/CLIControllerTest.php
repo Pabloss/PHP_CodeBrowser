@@ -78,7 +78,6 @@ class CLIControllerTest extends CbAbstractTests
         array(),
         array(),
         new CbIOHelper(),
-        new ezcConsoleOutput(),
         array('php')
     );
 

@@ -76,21 +76,12 @@ class CbSourceHandler
     protected $_files = array();
 
     /**
-     * Pear Log object where debug output should go to.
-     *
-     * @var ezcConsoleOutput
-     */
-    protected $_debugLog;
-
-    /**
      * Default constructor
      *
-     * @param ezcConsoleOutput $debugLog ConsoleOutput
-     * @param array            $plugins  The plugins to get issues from.
+     * @param array $plugins  The plugins to get issues from.
      */
-    public function __construct (ezcConsoleOutput $debugLog, array $plugins = array())
+    public function __construct (array $plugins = array())
     {
-        $this->_debugLog = $debugLog;
         array_walk($plugins, array($this, 'addPlugin'));
     }
 
@@ -102,8 +93,11 @@ class CbSourceHandler
     public function addPlugin(CbPluginsAbstract $plugin)
     {
         foreach ($plugin->getFilelist() as $file) {
+            /* @var $file CbFile */
             if (array_key_exists($file->name(), $this->_files)) {
-                $this->_files[$file->name()]->mergeWith($file);
+                $existingFile = $this->_files[$file->name()];
+                /* @var $existingFile CbFile */
+                $existingFile->mergeWith($file);
             } else {
                 $this->_files[$file->name()] = $file;
             }
@@ -113,7 +107,7 @@ class CbSourceHandler
     /**
      * Add source files to the list.
      *
-     * @param Array of SplFileInfo|String $files The files to add
+     * @param $files Array of SplFileInfo|String $files The files to add
      */
     public function addSourceFiles($files)
     {
@@ -122,11 +116,14 @@ class CbSourceHandler
         }
     }
 
-    /**
-     * Add a source file.
-     *
-     * @param String|SplFileInfo $file The file to add
-     */
+  /**
+   * Add a source file.
+   *
+   * @param String|SplFileInfo $file The file to add
+   *
+   * @return null
+   * @throws Exception
+   */
     public function addSourceFile($file)
     {
         if (is_string($file)) {
@@ -187,11 +184,6 @@ class CbSourceHandler
     {
         foreach (array_keys($this->_files) as $filename) {
             if (preg_match($expr, $filename)) {
-                $this->_debugLog->outputLine(
-                    "Excluding $filename, it matches PCRE $expr",
-                    "default",
-                    LOG_DEBUG
-                );
                 unset($this->_files[$filename]);
             }
         }
@@ -208,11 +200,6 @@ class CbSourceHandler
     {
         foreach (array_keys($this->_files) as $filename) {
             if (fnmatch($pattern, $filename)) {
-                $this->_debugLog->outputLine(
-                    "Excluding $filename, it matches pattern $pattern",
-                    "default",
-                    LOG_DEBUG
-                );
                 unset($this->_files[$filename]);
             }
         }

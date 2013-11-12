@@ -66,9 +66,8 @@ if (strpos('@php_dir@', '@php_dir') === false) {
 require_once dirname(__FILE__) . '/Autoload.php';
 require_once 'File/Iterator/Autoload.php';
 
-if (stream_resolve_include_path('ezc/Base/base.php')) {
-    require_once 'ezc/Base/base.php';
-    spl_autoload_register(array('ezcBase', 'autoload'));
+if (stream_resolve_include_path('Symfony/Component/Console/autoloader.php')) {
+    require_once 'Symfony/Component/Console/autoloader.php';
 }
 
 /**
@@ -137,13 +136,6 @@ class CbCLIController
     private $_ioHelper;
 
     /**
-     * ezcConsoleOutput object where debug output should go to.
-     *
-     * @var ezcConsoleOutput
-     */
-    private $_debugLog;
-
-    /**
      * Plugin-specific options. Formatted like
      *  array(
      *      'CbErrorCRAP' => array(
@@ -170,30 +162,23 @@ class CbCLIController
     private $_excludeOK;
 
     /**
-     * The constructor
+     * The constructor, standard setters are initialized
      *
-     * Standard setters are initialized
-     *
-     * @param string $logPath          The (path-to) xml log files. Can be null.
-     * @param Array  $projectSource    The project sources. Can be null.
-     * @param string $htmlOutputDir    The html output dir, where new files will
-     *                                 be created
-     * @param Array  $excludeExpressions
-     *                                 A list of PCREs. Files matching will not
-     *                                 appear in the output.
-     * @param Array  $pluginOptions    Array of Arrays with plugin-specific
-     *                                 options
-     * @param Array  $excludePatterns  A list of glob patterns. Files matching
-     *                                 will not appear in the output.
-     * @param CbIOHelper $ioHelper     The CbIOHelper object to be used for
-     *                                 filesystem interaction.
+     * @param string     $logPath            The (path-to) xml log files. Can be null.
+     * @param array      $projectSource      The project sources. Can be null.
+     * @param string     $htmlOutputDir      The html output dir, where new files will be created
+     * @param array      $excludeExpressions A list of PCREs. Files matching will not appear in the output.
+     * @param array      $excludePatterns    A list of glob patterns. Files matching
+     * @param array      $pluginOptions      Array of Arrays with plugin-specific options will not appear in the output.
+     * @param CbIOHelper $ioHelper           The CbIOHelper object to be used for filesystem interaction.
+     * @param array      $phpSuffixes        PHP Suffixes
+     * @param boolean    $excludeOK          Exclude OK ?
      */
-    public function __construct($logPath,               Array $projectSource,
-                                $htmlOutputDir,         Array $excludeExpressions,
-                                Array $excludePatterns, Array $pluginOptions,
-                                $ioHelper,                    $debugLog,
-                                Array $phpSuffixes,
-                                $excludeOK = false)
+    public function __construct($logPath, array $projectSource,
+                                $htmlOutputDir, array $excludeExpressions,
+                                array $excludePatterns, array $pluginOptions,
+                                CbIOHelper $ioHelper,
+                                array $phpSuffixes, $excludeOK = false)
     {
         $this->_logDir             = $logPath;
         $this->_projectSource      = $projectSource;
@@ -204,7 +189,6 @@ class CbCLIController
             $this->_pluginOptions["CbError$plugin"] = $options;
         }
         $this->_ioHelper           = $ioHelper;
-        $this->_debugLog           = $debugLog;
         $this->_registeredPlugins  = array();
         $this->_phpSuffixes        = $phpSuffixes;
         $this->_excludeOK          = $excludeOK;
@@ -256,7 +240,7 @@ class CbCLIController
             $this->_phpSuffixes
         );
 
-        $sourceHandler = new CbSourceHandler($this->_debugLog);
+        $sourceHandler = new CbSourceHandler();
 
         if (isset($this->_logDir)) {
             $cbIssueXml    = new CbIssueXml();
@@ -321,6 +305,7 @@ class CbCLIController
             // Disable E_Strict, Text_Highlighter might throw up
             ini_set('error_reporting', $error_reporting & ~E_STRICT);
             foreach ($files as $file) {
+                /* @var $file CbFile */
                 $cbViewReview->generate(
                     $file->getIssues(),
                     $file->name(),
@@ -368,13 +353,6 @@ class CbCLIController
             }
         }
 
-        $output = new ezcConsoleOutput();
-        if (isset($opts['debugExcludes'])) {
-            $output->setOptions(
-                array("verbosityLevel" => LOG_DEBUG)
-            );
-        }
-        
         // init new CLIController
         $controller = new CbCLIController(
             $opts['log'],
@@ -387,7 +365,6 @@ class CbCLIController
                                      )
                                    : array(),
             new CbIOHelper(),
-            $output,
             isset($opts['phpSuffixes']) ? explode(',', $opts['phpSuffixes'])
                                  : array('php'),
             isset($opts['excludeOK']) ? $opts['excludeOK'] : false
@@ -444,7 +421,7 @@ HERE
     /**
      * Checks the given options array for errors.
      *
-     * @param Array Options as returned by Console_CommandLine->parse()
+     * @param array $opts Options as returned by Console_CommandLine->parse()
      *
      * @return Array of String Errormessages.
      */

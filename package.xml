@@ -225,7 +225,7 @@
   <dependencies>
     <required>
       <php>
-        <min>5.2.6</min>
+        <min>5.3.3</min>
       </php>
       <pearinstaller>
         <min>1.8.1</min>
@@ -234,6 +234,11 @@
         <name>ConsoleTools</name>
         <channel>components.ez.no</channel>
         <min>1.6</min>
+      </package>
+      <package>
+        <name>Console</name>
+        <channel>pear.symfony.com</channel>
+        <min>2.2.0</min>
       </package>
       <package>
         <name>File_Iterator</name>
