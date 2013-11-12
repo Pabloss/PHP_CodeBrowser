@@ -47,7 +47,13 @@
  * @since     File available since  0.1.0
  */
 
-require_once dirname( __FILE__ ) . '/../../../autoload.php';
+foreach (array("../vendor", "../../..") as $vendors) {
+  $autoload = dirname( __FILE__ ) . '/' . $vendors . '/autoload.php';
+  if (file_exists($autoload)) {
+    require_once $autoload;
+    break;
+  }
+}
 
 require_once dirname( __FILE__ ) . '/../src/CLIController.php';
 
