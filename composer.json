@@ -3,8 +3,6 @@
     "description" : "A code browser that augments the code with information from various QA tools.",
     "license" : "BSD-2-Clause",
     "require" : {
-        "zetacomponents/base": "*",
-        "zetacomponents/console-tools": "~1.6",
         "symfony/console": ">=2.2.0",
         "phpunit/php-file-iterator" : "~1.3"
     },

@@ -4,6 +4,8 @@ function autoload4e6478a62c1e5($class) {
       if ($classes === null) {
          $classes = array(
             'cbclicontroller' => '/CLIController.php',
+            'cbcliapplication' => '/CLI/Application.php',
+            'cbclicommand' => 'CLI/Command.php',
             'cberrorcheckstyle' => '/Plugins/ErrorCheckstyle.php',
             'cberrorcoverage' => '/Plugins/ErrorCoverage.php',
             'cberrorcpd' => '/Plugins/ErrorCPD.php',

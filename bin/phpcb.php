@@ -53,4 +53,6 @@ if (strpos( '@php_dir@', '@php_dir' ) === 0) {
     require_once '@php_dir@/PHP_CodeBrowser/CLIController.php';
 }
 
-CbCLIController::main();
+//CbCLIController::main();
+$application = new CbCliApplication();
+$application->run();

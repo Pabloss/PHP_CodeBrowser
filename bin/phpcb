@@ -55,6 +55,7 @@ foreach (array("../vendor", "../../..") as $vendors) {
   }
 }
 
-require_once dirname( __FILE__ ) . '/../src/CLIController.php';
-
-CbCLIController::main();
+//require_once dirname( __FILE__ ) . '/../src/CLIController.php';
+//CbCLIController::main();
+$application = new CbCliApplication();
+$application->run();
